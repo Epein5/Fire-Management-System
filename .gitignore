@@ -1,0 +1,5 @@
+/venv
+/backend/ServiceAccountKey.json
+/backend/app/__pycache__
+/backend/app/services/__pycache__
+/Static
