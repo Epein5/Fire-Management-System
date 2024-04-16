@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Set the height of the map container */
+        #map { 
+            height: 100vh; /* Full height of the viewport */
+            width: calc(66.67% - 20px); /* Two-thirds of the viewport width, subtracting any margins */
+            float: left; /* Float the map to the left */
+        }
+
+        /* Add margin to the right to create space between the map and other content */
+        .content {
+            margin-left: calc(33.33% + 20px); /* One-third of the viewport width plus any margins */
+            padding: 20px; /* Add padding for better spacing */
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="content">
+        <!-- Add content here -->
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Define latitude and longitude variables with Jinja2 syntax
+        var latitude = {{latitude}};
+        var longitude = {{longitude}}
+        console.log(latitude, longitude)
+2
+        // Now you can use latitude and longitude variables in JavaScript code
+        var map = L.map('map').setView([latitude, longitude], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup("Fire Detected").openPopup();
+    </script>
+</body>
+</html>

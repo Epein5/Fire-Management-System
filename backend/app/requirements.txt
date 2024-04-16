@@ -3,3 +3,4 @@ uvicorn
 numpy
 opencv-python
 firebase-admin
+reverse_geocoder

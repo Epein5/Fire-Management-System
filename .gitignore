@@ -3,3 +3,5 @@
 /backend/app/__pycache__
 /backend/app/services/__pycache__
 /Static
+backend/app/services/__init__.py
+backend/app/services/test.py

@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, db, storage
 from  datetime import datetime
 import uuid
-
+import reverse_geocoder as rg
 
 class FirebaseService:
     def __init__(self):
@@ -17,6 +17,10 @@ class FirebaseService:
         ref = db.reference('/')
         return ref.get()
     
+    def get_all_fires(self):
+        ref = db.reference('Fire')
+        return ref.get()
+    
     
     def create_new_fire(self):
         ref = db.reference()
@@ -24,10 +28,10 @@ class FirebaseService:
         current_datetime = datetime.now().replace(microsecond=0).isoformat() + 'Z'
         new_fire_data = {
             'location': {
-                'latitude': 123.456,
-                'longitude': 789.012
+                'latitude': 27.50155,
+                'longitude': 85.42466
             },
-            'time_detected': current_datetime,
+            'time_detected': current_datetime[:10] + '     ' + current_datetime[11:16],
             'date_detected': current_datetime[:10],
             'severity': 'High',
             'condition': 'Not Assigned',
@@ -205,6 +209,25 @@ class FirebaseService:
     def generate_unique_id(self):
         unique_id = str(uuid.uuid4()).replace('-', '')[:6] 
         return unique_id
+    
+    def get_location_name(self, latitude, longitude):
+        location_infor = rg.search((latitude, longitude))
+        if location_infor:
+            location_name = location_infor[0]['name']
+            return location_name
 
-
+    def process_fires_with_location_names(self):
+        fire_data = self.get_all_fires()
+        if fire_data:
+            for fire_id, fire_info in fire_data.items():
+                latitude = fire_info.get('location', {}).get('latitude')
+                longitude = fire_info.get('location', {}).get('longitude')
+                if latitude is not None and longitude is not None:
+                    location_name = self.get_location_name(latitude, longitude)
+                    fire_info['location_name'] = location_name
+                else:
+                    fire_info['location_name'] = "Location not available"
+            return fire_data
+        else:
+            return None
     
