@@ -5,3 +5,5 @@
 /Static
 backend/app/services/__init__.py
 backend/app/services/test.py
+some.txt
+.vscode

@@ -98,7 +98,7 @@ from fastapi.staticfiles import StaticFiles
 from .services.firebaseservice import FirebaseService
 from fastapi.templating import Jinja2Templates
 from .model import *
-
+import httpx
 
 
 app = FastAPI()
@@ -114,8 +114,8 @@ async def read_root(request: Request):
     available_no_of_vehicles = firebase_service.get_assigned_and_available_resources_count()['available_vehicle_count']
     assigned_no_of_manpower = firebase_service.get_assigned_and_available_resources_count()['assigned_manpower_count']
     assigned_no_of_vehicles = firebase_service.get_assigned_and_available_resources_count()['assigned_vehicle_count']
-    # location = firebase_service.get_all_data()
-    # fire = firebase_service.get_all_fires()
+    hawa = firebase_service.get_all_assigned_resources()
+    print(hawa)
     try:
         fire_location = firebase_service.process_fires_with_location_names()
     except:
@@ -133,10 +133,11 @@ async def read_root(request: Request):
 @app.get("/map/{fire_id}", response_class=HTMLResponse)
 async def show_map(request: Request, fire_id: str):
     info = firebase_service.find_fire_by_id(fire_id)
-    print(info['condition'])
-    print(info['location']['latitude'])
-    # Assuming you have a map.html template in the "templates" directory
-    return templates.TemplateResponse("map.html", {"request": request, "latitude": info['location']['latitude'], "longitude": info['location']['longitude'], "condition": info['condition']})
+    remaining_resources = firebase_service.get_remaining_resources()
+    manpower_data, vehicle_data = remaining_resources  # Unpack the tuple
+
+    # print(remaining_resources)
+    return templates.TemplateResponse("map.html", {"request": request, "info": info, "manpower_data": manpower_data, "vehicle_data": vehicle_data,"fire_id":fire_id})
 
 @app.get("/delete/{fire_id}", response_class=JSONResponse)
 async def delete_fire(request: Request, fire_id: str):
@@ -144,29 +145,57 @@ async def delete_fire(request: Request, fire_id: str):
     # Return a JavaScript code to reload the page
     return {'message': "Fire entry with ID '{fire_id}' deleted successfully"}
 
-# @app.get("/fires")
-# def read_all_fires():
-#     return firebase_service.get_all_data()
+@app.get("/route", response_class=JSONResponse)
+async def get_route(start_latitude: float, start_longitude: float, end_latitude: float, end_longitude: float):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"https://api.openrouteservice.org/v2/directions/driving-car?api_key=YOUR_API_KEY&start={start_longitude},{start_latitude}&end={end_longitude},{end_latitude}"
+        )
+        return response.json()
 
-# #retruve number of fire cases
-# @app.get("/fires/count")
-# def read_all_fires():
-#     return firebase_service.find_total_fire_cases()
+@app.post("/assign-resources")
+async def assign_resources(resource_assignment: AssignResourcesRequest):
+    vehi_dict = {}
+    man_dict = {}
+    fire_id = resource_assignment.fire_id
+    manpower_data = resource_assignment.manpower_data
+    vehicle_data = resource_assignment.vehicle_data
 
-# @app.post("/fire/create/")
-# def create_fire():
-#     return {"fire_id": firebase_service.create_new_fire()}
+    for manpower_id in manpower_data:
+        manpower_info = firebase_service.get_resources_info(manpower_id, "manpower")
+        if manpower_info:
+            man_dict[manpower_id] = manpower_info
 
-# @app.put("/fire/{fire_id}/update/")
-# def update_fire_condition(fire_id: str):
-#     firebase_service.update_fire_condition(fire_id)
-#     return {"message": f"Fire condition updated for {fire_id}"}
+    for vehicle_id in vehicle_data:
+        vehicle_info = firebase_service.get_resources_info(vehicle_id, "vehicles")
+        if vehicle_info:
+            vehi_dict[vehicle_id] = vehicle_info
 
-# @app.delete("/fire/{fire_id}/delete/")
-# def delete_fire(fire_id: str):
-#     firebase_service.delete_fire(fire_id)
-#     return {"message": f"Fire entry with ID '{fire_id}' deleted successfully"}
+    firebase_service.assign_resources(fire_id, man_dict, vehi_dict)
+    firebase_service.update_fire_condition(fire_id)
+    return {"message": "Resources assigned successfully"}
 
-# @app.get("/resources/remaining")
-# def read_remaining_resources():
-#     return firebase_service.get_remaining_resources()
+@app.get("/livefeed", response_class=HTMLResponse)
+async def livefeed(request: Request):
+    no_of_fire_cases = firebase_service.find_total_fire_cases()
+    available_no_of_manpower = firebase_service.get_assigned_and_available_resources_count()['available_manpower_count']
+    available_no_of_vehicles = firebase_service.get_assigned_and_available_resources_count()['available_vehicle_count']
+    assigned_no_of_manpower = firebase_service.get_assigned_and_available_resources_count()['assigned_manpower_count']
+    assigned_no_of_vehicles = firebase_service.get_assigned_and_available_resources_count()['assigned_vehicle_count']
+    try:
+        fire_location = firebase_service.process_fires_with_location_names()
+    except:
+        print("Error in processing fire data with location names")
+    return templates.TemplateResponse("live.html", 
+                                      {"request": request,
+                                       "no_of_fire_cases": no_of_fire_cases,
+                                       "available_no_of_manpower": available_no_of_manpower,
+                                       "available_no_of_vehicles": available_no_of_vehicles,
+                                       "assigned_no_of_manpower": assigned_no_of_manpower,
+                                       "assigned_no_of_vehicles": assigned_no_of_vehicles,
+                                       "fire_location": fire_location,})
+
+@app.get("/video_feed/{video_id}", response_class=HTMLResponse)
+async def video_feed(request: Request, video_id: str):
+    print(video_id)
+    return {"video_id": video_id}

@@ -10,6 +10,58 @@
     <title>Fire Management System</title>
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+
+  
+        .video-container {
+          margin: 20px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-gap: 27px;
+        }
+  
+        .video-item {
+          position: relative;
+          overflow: hidden;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+  
+        .video-item video {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+  
+        .video-item .overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          color: #fff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 24px;
+          text-align: center;
+        }
+  
+        footer {
+          background-color: #333;
+          color: #fff;
+          text-align: center;
+          padding: 10px 0;
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+  
+        footer p {
+          margin: 0;
+        }
+      </style>
 </head>
 
 <body>
@@ -29,14 +81,14 @@
                 <li>
                     <a href="/">
                         <span class="icon">
-                            <ion-icon name="home-outline"></ion-icon>
+                            <ion-icon name="speedometer-outline"></ion-icon>
                         </span>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/livefeed">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="camera-outline"></ion-icon>
                         </span>
@@ -96,13 +148,6 @@
             <div class="topbar">
                 <div class="toggle">
                     <ion-icon name="menu-outline"></ion-icon>
-                </div>
-
-                <div class="search">
-                    <label>
-                        <input type="text" placeholder="Search here">
-                        <ion-icon name="search-outline"></ion-icon>
-                    </label>
                 </div>
 
                 <div class="user">
@@ -167,59 +212,84 @@
                 </div>
             </div>
 
-            <!-- ================ Order Details List ================= -->
-
-            <div class="details">
-                <div class="recentOrders">
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Detected Location</td>
-                                <td>Detected Time</td>
-                                <td>Sevearty</td>
-                                <td>FireFighters Status.</td>
-                                
-                                <td>View with Map</td>
-                                <td>Delete Fire</td>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {% for fire_id, fire_data in fire_location.items() %}
-                            <tr>
-                                <td>{{ fire_data.location_name }}</td>
-                                <td>{{ fire_data.time_detected }}</td>
-                                <td>{{ fire_data.severity }}</td>
-                                <td>
-                                    {% if fire_data.condition == "Already Assigned" %}
-                                            <span class="status delivered">Already Assigned</span>
-                                        {% elif fire_data.condition == "Not Assigned" %}
-                                            <span class="status return">Not Assigned</span>
-                                        {% elif fire_data.condition == "return" %}
-                                            <span class="status return">Return</span>
-                                        {% endif %}
-                                </td>
-                                <td>
-                                    <a href="/map/{{ fire_id }}" class="view-button">
-                                      <i class="fas fa-map-marker-alt"></i> View Details
-                                    </a>
-                                  </td>
-                                  <td><a href="/delete/{{ fire_id }}" class="view-button"><i class="fas fa-trash-alt"></i></a></td>
-
-
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div  class="video-container">
+                <div class="video-item">
+                    <video class="video" id="webcam" autoplay muted loop>
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="overlay"></div>
+                </div>
+                <div class="video-item">
+                    
+                    <video class="video" id="1" autoplay muted loop>
+                      <source src="../Static/videos/video1.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+          
+                    <a href="{{ url_for('video_feed', video_id='1') }}" class="video-link"
+                      ><div class="overlay">Camera 1</div></a
+                    >
+                  </div>
+                  <div class="video-item">
+                    <video class="video" id="2" autoplay muted loop>
+                      <source src="../Static/videos/video2.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+          
+                    <a href="{{ url_for('video_feed', video_id='2') }}" class="video-link"
+                      ><div class="overlay">Camera 2</div></a
+                    >
+                  </div>
+                  <div class="video-item">
+                    <video class="video" id="3" autoplay muted loop>
+                      <source src="../Static/videos/video3.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+          
+                    <a href="{{ url_for('video_feed', video_id='3') }}" class="video-link"
+                      ><div class="overlay">Camera 3</div></a
+                    >
+                  </div>
+                  <div class="video-item">
+                    <video class="video" id="4" autoplay muted loop>
+                      <source src="../static/videos/video4.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+          
+                    <a href="{{ url_for('video_feed', video_id='4') }}" class="video-link"
+                      ><div class="overlay">Camera 4</div></a
+                    >
+                  </div>
+                  <div class="video-item">
+                    <video class="video" id="4" autoplay muted loop>
+                      <source src="../static/videos/video5.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+          
+                    <a href="{{ url_for('video_feed', video_id='5') }}" class="video-link"
+                      ><div class="overlay">Camera 5</div></a
+                    >
+                  </div>
             </div>
+            
         </div>
     </div>
 
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
 
-    <!-- ====== ionicons ======= -->
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function(stream) {
+      var video = document.getElementById('webcam');
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(function(error) {
+      console.error('Error accessing webcam:', error);
+    });
+  
+        </script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>

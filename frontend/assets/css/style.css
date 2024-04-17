@@ -16,8 +16,35 @@
   display: flex;
   flex-direction: row;
 
+
+}
+.view-button {
+  text-decoration: none; /* Remove underline */
+  color: #dc3545; /* Icon color */
 }
 
+/* Optional: Adjust icon size */
+.view-button i {
+  font-size: 20px;
+}
+
+.view-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.view-button:hover {
+  background-color: #0056b3;
+}
+
+.view-button i {
+  margin-right: 5px;
+}
 
 
 
@@ -349,7 +376,7 @@ body {
   text-align: center;
 }
 .status.delivered {
-  padding: 2px 4px;
+  padding: 4px 6px;
   background: #8de02c;
   color: var(--white);
   border-radius: 4px;
@@ -357,7 +384,7 @@ body {
   font-weight: 500;
 }
 .status.pending {
-  padding: 2px 4px;
+  padding: 4px 6px;
   background: #e9b10a;
   color: var(--white);
   border-radius: 4px;
@@ -365,7 +392,7 @@ body {
   font-weight: 500;
 }
 .status.return {
-  padding: 2px 4px;
+  padding: 4px 6px;
   background: #f00;
   color: var(--white);
   border-radius: 4px;
@@ -373,7 +400,7 @@ body {
   font-weight: 500;
 }
 .status.inProgress {
-  padding: 2px 4px;
+  padding: 4px 6px;
   background: #1795ce;
   color: var(--white);
   border-radius: 4px;
@@ -445,3 +472,4 @@ body {
     left: initial;
   }
 }
+

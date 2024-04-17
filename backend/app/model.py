@@ -6,3 +6,8 @@ class FireCreate(BaseModel):
 
 class VehicleCreate(BaseModel):
     photo_url: str
+
+class AssignResourcesRequest(BaseModel):
+    fire_id: str
+    manpower_data: list[str]
+    vehicle_data: list[str]

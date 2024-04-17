@@ -1,3 +1,5 @@
+<!-- map.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,32 +8,298 @@
     <title>Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        /* Set the height of the map container */
+        * {
+            padding: 0px;
+            font-family: 'Poppins', 'sans-serif';
+            box-sizing: border-box;
+        }
+        
+        .accordion {
+            width: 50vb;
+        }
+        
+        .accordion li {
+            margin: 5px;
+            list-style: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            background: #e3edf7;
+            box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+                        -6px, -6px 10px -1px rgba(255, 255, 255, 0.7);
+        }
+        
+        .accordion li label {
+            display: flex;
+            align-items: center;
+            padding: 1px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        label::before {
+            content: '+';
+            margin-right: 10px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        label::after {
+            max-height: 0;
+            padding: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        
+        input[type='radio'] {
+            display: none;
+        }
+        
+        .accordion .contentt {
+            color: #555;
+            padding: 0 10px;
+            line-height: 26px;
+            max-height: 0;
+            overflow: auto;
+            transition: max-height 0.5s, padding 0.5s;
+        }
+        
+        .accordion input[type='radio']:checked + label + .contentt {
+            max-height: 400px;
+            padding: 10px;
+        }
+        
+        .accordion input[type='radio']:checked + label::before {
+            content: '-';
+        }
+        
         #map { 
-            height: 100vh; /* Full height of the viewport */
-            width: calc(66.67% - 20px); /* Two-thirds of the viewport width, subtracting any margins */
-            float: left; /* Float the map to the left */
+            height: 100vh; 
+            width: calc(66.67% - 20px);
+            float: right; 
         }
-
-        /* Add margin to the right to create space between the map and other content */
+        
         .content {
-            margin-left: calc(33.33% + 20px); /* One-third of the viewport width plus any margins */
-            padding: 20px; /* Add padding for better spacing */
+            margin-left: calc(33.33% + 20px);
+            padding: 20px; 
         }
+        
+        nav {
+            background-color: #4caf50;
+            padding: 10px;
+            color: #fff;
+            width: 58vb;
+        }
+        
+        .route-info {
+            margin-top: 20px;
+        }
+        
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 3px;
+            font-size: 13px;
+            max-height: 50px;
+        }
+        
+        .card-header {
+            padding: 5px;
+            background-color: rgb(233, 241, 244);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-body {
+            padding: 2px;
+        }
+        
+        .avatar {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
     </style>
 </head>
 <body>
     <div id="map"></div>
-    <div class="content">
-        <!-- Add content here -->
-    </div>
+    <nav>
+        <h2>Fire Information</h2>
+    </nav>
+    <ul class = "accordion">
+        <li>
+            <input type="radio" name="accordion" id="first">
+            <label for="first">Location :  {{info.location_name}}</label>
+            <!-- <div class="contentt">
+                <p>latitude: {{info.location.latitude}} longitude: {{info.location.longitude}}</p>
+            </div> -->
+        </li>
+        <li>
+            <input type="radio" name="accordion" id="second">
+            <label for="second">Detected Time: :  {{info.time_detected}}</label>
+            <!-- <div class="contentt">
+                <p>latitude: {{info.location.latitude}} longitude: {{info.location.longitude}}</p>
+            </div> -->
+        </li>
+        <li>
+            <input type="radio" name="accordion" id="third">
+            <label for="third">Severity :  {{info.severity}}</label>
+            <!-- <div class="contentt">
+                <p>latitude: {{info.location.latitude}} longitude: {{info.location.longitude}}</p>
+            </div> -->
+        </li>
+        <li>
+            <input type="radio" name="accordion" id="fourth">
+            <label for="fourth">Condition :  {{info.condition}}</label>
+            <!-- <div class="contentt">
+                <p>latitude: {{info.location.latitude}} longitude: {{info.location.longitude}}</p>
+            </div> -->
+        </li>
+        {% if info.resources_assigned %}
+    <li>
+        <input type="radio" name="accordion" id="fifth">
+        <label for="fifth">View Manpower Assigned</label>
+        <div class="contentt">
+            {% for manpower_id, manpower_data in info.resources_assigned.manpower.items() %}
+            <div class="card">
+                <div class="card-header">
+                    <img src="" class="avatar" id="randomAvatar" width="25" height="25">
+                    <div>
+                        <span>Badge Number: {{ manpower_id }}  |  {{ manpower_data.name }}</span>
+                    </div>
+                </div>
+                <!-- <div class="card-body">
+                </div> -->
+            </div>
+            {% endfor %}
+        </div>
+    </li>
+    <li>
+        <input type="radio" name="accordion" id="sixth">
+        <label for="sixth">View Vehicles Assigned</label>
+        <div class="contentt">
+            {% for vehicle_id, vehicle_data in info.resources_assigned.vehicles.items() %}
+            <div class="card">
+                <div class="card-header">
+                    <img src="" class="avatar" id="randomAAvatar" width="25" height="25">
+                    <div>
+                        <span>Number Plate: {{ vehicle_id }}</span>
+                    </div>
+                </div>
+                <!-- <div class="card-body">
+                </div> -->
+            </div>
+            {% endfor %}
+        </div>
+    </li>
+    {% else %}
+    <li>
+        <input type="radio" name="accordion" id="assign">
+        <label for="assign">Assign Resources</label>
+        <div class="contentt">
+            <form id="assignForm">
+                <h3>Manpower</h3>
+                {% for manpower_id, manpower_info in manpower_data.items() %}
+                <div class="card">
+                    <div class="card-header">
+                        <input type="checkbox" id="manpower{{ manpower_id }}" name="manpower" value="{{ manpower_id }}">
+                        <label for="manpower{{ manpower_id }}">
+                            <img src="" class="avatar" id="randomAvatar" width="25" height="25">
+                            <span>Badge Number: {{ manpower_id }}  |  {{ manpower_info.name }}</span>
+                        </label>
+                    </div>
+                    <!-- <div class="card-body">
+                    </div> -->
+                </div>
+                {% endfor %}
+    
+                <h3>Vehicles</h3>
+                {% for vehicle_id, vehicle_info in vehicle_data.items() %}
+                <div class="card">
+                    <div class="card-header">
+                        <input type="checkbox" id="vehicle{{ vehicle_id }}" name="vehicle" value="{{ vehicle_id }}">
+                        <label for="vehicle{{ vehicle_id }}">
+                            <img src="" class="avatar" id="randomAAvatar" width="25" height="25">
+                            <span>Number Plate: {{ vehicle_id }}</span>
+                        </label>
+                    </div>
+                    <!-- <div class="card-body">
+                    </div> -->
+                </div>
+                {% endfor %}
+    
+                <button type="button" onclick="submitResources()">Submit</button>
+            </form>
+        </div>
+    </li>
+    
+    {% endif %}
+        
+        
+    </ul>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        // Define latitude and longitude variables with Jinja2 syntax
-        var latitude = {{latitude}};
-        var longitude = {{longitude}}
-        console.log(latitude, longitude)
-2
+        function submitResources() {
+            // Get selected manpower and vehicle items
+            var selectedManpower = [];
+            var selectedVehicle = [];
+            var manpowerCheckboxes = document.getElementsByName('manpower');
+            var vehicleCheckboxes = document.getElementsByName('vehicle');
+    
+            // Retrieve selected manpower items
+            for (var i = 0; i < manpowerCheckboxes.length; i++) {
+                if (manpowerCheckboxes[i].checked) {
+                    selectedManpower.push(manpowerCheckboxes[i].value);
+                }
+            }
+    
+            // Retrieve selected vehicle items
+            for (var i = 0; i < vehicleCheckboxes.length; i++) {
+                if (vehicleCheckboxes[i].checked) {
+                    selectedVehicle.push(vehicleCheckboxes[i].value);
+                }
+            }
+    
+            // Call assign_resources function with selected resources
+            assignResources(selectedManpower, selectedVehicle);
+        }
+    
+        function assignResources(selectedManpower, selectedVehicle) {
+            // Assuming you have the fire_id available
+            var fire_id = "{{ fire_id }}"; // Corrected interpolation syntax with double quotes
+            
+            // Make a POST request to your backend API to assign resources
+            fetch('/assign-resources', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fire_id: fire_id,
+                    manpower_data: selectedManpower,
+                    vehicle_data: selectedVehicle
+                })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Resources assigned successfully');
+                    // You can perform additional actions here if needed
+                } else {
+                    console.error('Failed to assign resources');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        
+
+    </script>
+    <script>
+        var latitude = {{info.location.latitude}};
+        var longitude = {{info.location.longitude}};
+
         // Now you can use latitude and longitude variables in JavaScript code
         var map = L.map('map').setView([latitude, longitude], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -39,6 +307,44 @@
         }).addTo(map);
         L.marker([latitude, longitude]).addTo(map)
             .bindPopup("Fire Detected").openPopup();
+
+        // Use Geolocation API to get the user's current location
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var userLatitude = position.coords.latitude;
+            var userLongitude = position.coords.longitude;
+            L.marker([userLatitude, userLongitude]).addTo(map)
+                .bindPopup("Your Location").openPopup();
+            
+            // Fetch route information from the backend
+            // Parse route data and draw polyline on map
+        function drawRoute(routeData) {
+            // Extract coordinates from route data
+            var coordinates = routeData.features[0].geometry.coordinates;
+            
+            // Convert coordinates to LatLng objects
+            var latLngs = coordinates.map(function(coord) {
+                return [coord[1], coord[0]]; // Leaflet uses [lat, lng] format
+            });
+
+            // Create polyline with coordinates
+            var polyline = L.polyline(latLngs, {color: 'red'}).addTo(map);
+
+            // Fit map bounds to the polyline
+            map.fitBounds(polyline.getBounds());
+        }
+
+        // Fetch route information from the backend
+        fetch(`https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf62483e48505671d7423b8e8233754651b092&start=${userLongitude},${userLatitude}&end=${longitude},${latitude}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.features && data.features.length > 0) {
+                    drawRoute(data); // Draw the route on the map
+                } else {
+                    console.error('No route data found.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+                });
     </script>
 </body>
 </html>
