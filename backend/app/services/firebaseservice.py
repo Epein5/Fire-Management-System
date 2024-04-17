@@ -13,6 +13,13 @@ class FirebaseService:
         })
         self.bucket = storage.bucket()
 
+    def get_image(self,image_name):
+        full_path = f"Resources/Manpower/{image_name}"
+        blob = self.bucket.blob(full_path)
+        image_data = blob.download_as_bytes()
+        return image_data
+
+
     def get_all_data(self):
         ref = db.reference('/')
         return ref.get()
@@ -211,10 +218,11 @@ class FirebaseService:
         return unique_id
     
     def get_location_name(self, latitude, longitude):
-        location_infor = rg.search((latitude, longitude))
-        if location_infor:
-            location_name = location_infor[0]['name']
-            return location_name
+        # location_infor = rg.search((latitude, longitude))
+        # if location_infor:
+        #     location_name = location_infor[0]['name']
+        #     return location_name
+        return "DEMO"
 
     def process_fires_with_location_names(self):
         fire_data = self.get_all_fires()
@@ -231,3 +239,12 @@ class FirebaseService:
         else:
             return None
     
+    def get_resources_info(self, id, type):
+        remaining_resources = self.get_remaining_resources()
+        manpower_data, vehicle_data = remaining_resources
+        if type == "manpower":
+            resource_info = manpower_data.get(id)
+            return resource_info
+        elif type == "vehicles":
+            vehicle_info = vehicle_data.get(id)
+            return vehicle_info
