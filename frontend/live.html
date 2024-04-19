@@ -213,62 +213,72 @@
             </div>
 
             <div  class="video-container">
-                <div class="video-item">
+                <!-- <div class="video-item">
                     <video class="video" id="webcam" autoplay muted loop>
                         Your browser does not support the video tag.
                     </video>
                     <div class="overlay"></div>
-                </div>
+                </div> -->
                 <div class="video-item">
                     
-                    <video class="video" id="1" autoplay muted loop>
-                      <source src="../Static/videos/video1.mp4" type="video/mp4" />
+                    <video class="video" id="0" autoplay muted loop>
+                      <source src="../static/videos/video1.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
           
-                    <a href="{{ url_for('video_feed', video_id='1') }}" class="video-link"
+                    <a href="" class="video-link"
+                      ><div class="overlay">Camera 1</div></a
+                    >
+                  </div>
+                <div class="video-item">
+                    
+                    <video class="video" id="1" autoplay muted loop>
+                      <source src="../static/videos/video1.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+          
+                    <a href="" class="video-link"
                       ><div class="overlay">Camera 1</div></a
                     >
                   </div>
                   <div class="video-item">
                     <video class="video" id="2" autoplay muted loop>
-                      <source src="../Static/videos/video2.mp4" type="video/mp4" />
+                      <source src="../static/videos/video1.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
           
-                    <a href="{{ url_for('video_feed', video_id='2') }}" class="video-link"
+                    <a href="" class="video-link"
                       ><div class="overlay">Camera 2</div></a
                     >
                   </div>
                   <div class="video-item">
                     <video class="video" id="3" autoplay muted loop>
-                      <source src="../Static/videos/video3.mp4" type="video/mp4" />
+                      <source src="../static/videos/video1.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
           
-                    <a href="{{ url_for('video_feed', video_id='3') }}" class="video-link"
+                    <a href="" class="video-link"
                       ><div class="overlay">Camera 3</div></a
                     >
                   </div>
                   <div class="video-item">
                     <video class="video" id="4" autoplay muted loop>
-                      <source src="../static/videos/video4.mp4" type="video/mp4" />
+                      <source src="../static/videos/video1.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
           
-                    <a href="{{ url_for('video_feed', video_id='4') }}" class="video-link"
+                    <a href="" class="video-link"
                       ><div class="overlay">Camera 4</div></a
                     >
                   </div>
                   <div class="video-item">
                     <video class="video" id="4" autoplay muted loop>
-                      <source src="../static/videos/video5.mp4" type="video/mp4" />
+                      <source src="../static/videos/video1.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
           
-                    <a href="{{ url_for('video_feed', video_id='5') }}" class="video-link"
-                      ><div class="overlay">Camera 5</div></a
-                    >
+                    <a href="" class="video-link"
+                      ><div class="overlay">Camera 5</div></a>
                   </div>
             </div>
             
@@ -278,7 +288,7 @@
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
 
-    <script>
+    <!-- <script>
         navigator.mediaDevices.getUserMedia({ video: true })
     .then(function(stream) {
       var video = document.getElementById('webcam');
@@ -289,7 +299,7 @@
       console.error('Error accessing webcam:', error);
     });
   
-        </script>
+        </script> -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>

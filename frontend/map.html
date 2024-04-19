@@ -165,7 +165,7 @@
             {% for manpower_id, manpower_data in info.resources_assigned.manpower.items() %}
             <div class="card">
                 <div class="card-header">
-                    <img src="" class="avatar" id="randomAvatar" width="25" height="25">
+                    <img src="../static/images/6.jpg" class="avatar" id="randomAvatar" width="25" height="25">
                     <div>
                         <span>Badge Number: {{ manpower_id }}  |  {{ manpower_data.name }}</span>
                     </div>
@@ -183,7 +183,7 @@
             {% for vehicle_id, vehicle_data in info.resources_assigned.vehicles.items() %}
             <div class="card">
                 <div class="card-header">
-                    <img src="" class="avatar" id="randomAAvatar" width="25" height="25">
+                    <img src="../static/images/f1.jpg" class="avatar" id="randomAvatar" width="25" height="25">
                     <div>
                         <span>Number Plate: {{ vehicle_id }}</span>
                     </div>
@@ -206,7 +206,7 @@
                     <div class="card-header">
                         <input type="checkbox" id="manpower{{ manpower_id }}" name="manpower" value="{{ manpower_id }}">
                         <label for="manpower{{ manpower_id }}">
-                            <img src="" class="avatar" id="randomAvatar" width="25" height="25">
+                            <img src="../static/images/4.jpg" class="avatar" id="randomAvatar" width="25" height="25">
                             <span>Badge Number: {{ manpower_id }}  |  {{ manpower_info.name }}</span>
                         </label>
                     </div>
@@ -221,7 +221,7 @@
                     <div class="card-header">
                         <input type="checkbox" id="vehicle{{ vehicle_id }}" name="vehicle" value="{{ vehicle_id }}">
                         <label for="vehicle{{ vehicle_id }}">
-                            <img src="" class="avatar" id="randomAAvatar" width="25" height="25">
+                            <img src="../static/images/f1.jpg" class="avatar" id="randomAAvatar" width="25" height="25">
                             <span>Number Plate: {{ vehicle_id }}</span>
                         </label>
                     </div>
@@ -238,8 +238,12 @@
     {% endif %}
         
         
-    </ul>
+    </ul>>
+
+    
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
     <script>
         function submitResources() {
             // Get selected manpower and vehicle items
