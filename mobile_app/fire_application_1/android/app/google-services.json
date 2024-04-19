@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "739834107827",
+    "firebase_url": "https://fire-management-system-13bcd-default-rtdb.firebaseio.com",
+    "project_id": "fire-management-system-13bcd",
+    "storage_bucket": "fire-management-system-13bcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739834107827:android:9fc2836e896e445b411dc6",
+        "android_client_info": {
+          "package_name": "com.example.fire_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX_Zl3m2l6lMdNV-HIz0fY1Ehq_DUSUgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
