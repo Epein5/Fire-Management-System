@@ -30,7 +30,6 @@ class SetupTextField extends StatelessWidget {
   }
 }
 
-
 class RoundBtn extends StatelessWidget {
   final String? text;
   final double? height;
@@ -52,7 +51,7 @@ class RoundBtn extends StatelessWidget {
           width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: const Color.fromARGB(225, 0, 187, 134),
+            color: Color.fromARGB(224, 187, 0, 0),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

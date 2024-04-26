@@ -1,17 +1,20 @@
+// firebasese.dart
 import 'package:firebase_database/firebase_database.dart';
+import 'package:location/location.dart';
 
 class FireService {
-  // Future<List<dynamic>> fetchFireData() async {
-  //   final databaseReference = FirebaseDatabase.instance.ref().child('Fire').onValue;
-  //   List<dynamic> fireData = [];
-  //   await databaseReference.then((value) {
-  //     print('got');
-  //     return fireData;
-  //   }).onError((error, stackTrace) {
-  //     print(error);
-  //     return fireData;
-  //   });
-  //   print(1);
-  //   return fireData;
-  // }
+  final databaseReference = FirebaseDatabase.instance.ref();
+
+  Future<void> addFire(String severity, LocationData locationData) async {
+    await databaseReference.child('Fire').push().set({
+      'severity': severity,
+      'location': {
+        'latitude': locationData.latitude,
+        'longitude': locationData.longitude,
+      },
+      'condition': 'Not_assigned',
+      'date_detected': DateTime.now().toIso8601String().substring(0, 10),
+      'time_detected': '${DateTime.now().toIso8601String().substring(0, 10)} ${DateTime.now().toIso8601String().substring(11, 16)}',
+    });
+  }
 }
