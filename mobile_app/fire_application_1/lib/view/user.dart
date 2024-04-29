@@ -129,6 +129,7 @@ class _UserViewState extends State<UserView> {
     'Low',
   ];
   String? selectedValue;
+  String? selectedValue2;
 
   @override
   Widget build(BuildContext context) {
@@ -186,8 +187,8 @@ class _UserViewState extends State<UserView> {
                   heightFactor: 5,
                   alignment: Alignment.center,
                   child: Text(
-                    "Select Fire",
-                    style: GoogleFonts.abel(
+                    "Report Fire in Your Area ",
+                    style: GoogleFonts.satisfy(
                       color: Colors.white,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -280,12 +281,62 @@ class _UserViewState extends State<UserView> {
             SizedBox(
               height: height * 0.02,
             ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width *
+                  0.9, // 80% of screen width
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2<String>(
+                  // isExpanded: true,
+                  hint: Text(
+                    'Fire Type',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                  items: items
+                      .map((String item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  value: selectedValue2,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedValue = value;
+                    });
+                  },
+                  buttonStyleData: ButtonStyleData(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    height: 40,
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 40,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: height * 0.02,
+            ),
             selectedValue != null &&
                     _predictions[0]['label'].toString().substring(1) == ' fire'
                 ? RoundBtn(
-                    text: "Upload",
+                    text: "Send Report",
                     height: height * 0.07,
-                    width: width * 0.25,
+                    width: width * 0.5,
                     ontap: () async {
                       LocationData? locationData = await retrieveLocation();
                       if (locationData != null) {
@@ -295,8 +346,6 @@ class _UserViewState extends State<UserView> {
                           Navigator.pop(context);
                           popupmessages.flushBarErrorMessage(
                               'Fire Reported Successfully', context);
-                          
-
                         });
                       }
                     },

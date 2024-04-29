@@ -5,7 +5,15 @@ from .services.firebaseservice import FirebaseService
 from fastapi.templating import Jinja2Templates
 from .model import *
 import httpx
+from fastapi.responses import StreamingResponse
+import cv2
+from ultralytics import YOLO
+import numpy as np
+import os
 
+# Load the YOLOv8 model
+# model = YOLO("yolov8n.pt")
+model = YOLO("static/model/firev8.pt")
 
 app = FastAPI()
 templates = Jinja2Templates(directory=r"C:\Users\KNYpe\Desktop\Fire-Management-System\frontend")
@@ -106,3 +114,82 @@ async def livefeed(request: Request):
 async def video_feed(request: Request, video_id: str):
     print(video_id)
     return {"video_id": video_id}
+
+
+# def generate_frames(video_path):
+#     print(video_path)
+#     print("Generating frames")
+#     camera = cv2.VideoCapture(video_path)
+#     while True:
+#         success, frame = camera.read()
+#         if not success:
+#             break
+#         else:
+#             # Run object detection using YOLOv8
+#             results = model(frame)
+
+#             # Draw bounding boxes and labels on the frame
+#             annotated_frame = results[0].plot()
+#             frame = cv2.cvtColor(np.array(annotated_frame), cv2.COLOR_RGB2BGR)
+
+#             # Call the 'create_fire' function for each detected object
+#             for detection in results[0].boxes.data.tolist():
+#                 x1, y1, x2, y2, score, class_id = detection
+#                 class_name = results[0].names[int(class_id)]
+#                 confidence = float(score)
+#                 # create_fire(frame, x1, y1, x2 - x1, y2 - y1, class_name, confidence)
+#                 # print("DUMMY FUNCTION CALLED")
+
+#             ret, buffer = cv2.imencode('.jpg', frame)
+#             frame = buffer.tobytes()
+#             # print("Frame generated")
+#             # yield (b'--frame\r\n'
+#             #        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+video_paths = {
+    # "1": "static/videos/fire0.mp4",
+    "2": "static/videos/fire1.mp4",
+    # "3": "static/videos/video1.mp4",
+    # "4": "static/videos/cow.mp4",
+    # Add more video paths as needed
+}
+
+video_captures = {video_id: cv2.VideoCapture(path) for video_id, path in video_paths.items()}
+print(video_captures)
+
+def generate_frames(video_id):
+    print(f"Generating frames for video: {video_id}")
+    camera = video_captures[video_id]
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            # Run object detection using YOLOv8
+            downsampled_frame = cv2.resize(frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+            results = model(downsampled_frame)
+
+            # Draw bounding boxes and labels on the frame
+            annotated_frame = results[0].plot()
+            # frame = cv2.cvtColor(np.array(annotated_frame), cv2.COLOR_RGB2BGR)
+            frame = np.array(annotated_frame)
+            # Call the 'create_fire' function for each detected object
+            # for detection in results[0].boxes.data.tolist():
+            #     x1, y1, x2, y2, score, class_id = detection
+            #     class_name = results[0].names[int(class_id)]
+            #     confidence = float(score)
+            #     create_fire(frame, x1, y1, x2 - x1, y2 - y1, class_name, confidence, video_id)
+
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            # print("Frame generated")
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.get("/video/{video_id}")
+async def video_feed(video_id: str):
+    print(f"Video feed for video: {video_id}")
+    if video_id in video_captures:
+        return StreamingResponse(generate_frames(video_id), media_type="multipart/x-mixed-replace; boundary=frame")
+    else:
+        return {"error": f"Video '{video_id}' not found"}

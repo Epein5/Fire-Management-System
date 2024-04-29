@@ -218,11 +218,11 @@ class FirebaseService:
         return unique_id
     
     def get_location_name(self, latitude, longitude):
-        # location_infor = rg.search((latitude, longitude))
-        # if location_infor:
-        #     location_name = location_infor[0]['name']
-        #     return location_name
-        return "DEMO"
+        location_infor = rg.search((latitude, longitude))
+        if location_infor:
+            location_name = location_infor[0]['name']
+            return location_name
+        return "CHECK MAP"
 
     def process_fires_with_location_names(self):
         fire_data = self.get_all_fires()

@@ -76,11 +76,11 @@ class _MapViewState extends State<MapView> {
       ),
       body: FlutterMap(
         options: MapOptions(
-          center: LatLng(
+          initialCenter: LatLng(
             widget.fire['location']['latitude'],
             widget.fire['location']['longitude'],
           ),
-          zoom: 13.0,
+          initialZoom: 13.0,
         ),
         children: [
           TileLayer(

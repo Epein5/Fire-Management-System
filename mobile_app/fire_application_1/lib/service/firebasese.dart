@@ -12,7 +12,7 @@ class FireService {
         'latitude': locationData.latitude,
         'longitude': locationData.longitude,
       },
-      'condition': 'Not_assigned',
+      'condition': 'Not Assigned',
       'date_detected': DateTime.now().toIso8601String().substring(0, 10),
       'time_detected': '${DateTime.now().toIso8601String().substring(0, 10)} ${DateTime.now().toIso8601String().substring(11, 16)}',
     });
