@@ -223,7 +223,8 @@ class FirebaseService:
             location_name = location_infor[0]['name']
             return location_name
         return "CHECK MAP"
-
+    
+    
     def process_fires_with_location_names(self):
         fire_data = self.get_all_fires()
         if fire_data:
@@ -238,6 +239,9 @@ class FirebaseService:
             return fire_data
         else:
             return None
+
+    # def process_fires_with_location_names(self):
+    #     return "HAHA"
     
     def get_resources_info(self, id, type):
         remaining_resources = self.get_remaining_resources()

@@ -281,53 +281,53 @@ class _UserViewState extends State<UserView> {
             SizedBox(
               height: height * 0.02,
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width *
-                  0.9, // 80% of screen width
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton2<String>(
-                  // isExpanded: true,
-                  hint: Text(
-                    'Fire Type',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).hintColor,
-                    ),
-                  ),
-                  items: items
-                      .map((String item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ))
-                      .toList(),
-                  value: selectedValue2,
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedValue = value;
-                    });
-                  },
-                  buttonStyleData: ButtonStyleData(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    height: 40,
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                    height: 40,
-                  ),
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   width: MediaQuery.of(context).size.width *
+            //       0.9, // 80% of screen width
+            //   child: DropdownButtonHideUnderline(
+            //     child: DropdownButton2<String>(
+            //       // isExpanded: true,
+            //       hint: Text(
+            //         'Fire Type',
+            //         style: TextStyle(
+            //           fontSize: 14,
+            //           color: Theme.of(context).hintColor,
+            //         ),
+            //       ),
+            //       items: items
+            //           .map((String item) => DropdownMenuItem<String>(
+            //                 value: item,
+            //                 child: Text(
+            //                   item,
+            //                   style: const TextStyle(
+            //                     fontSize: 14,
+            //                   ),
+            //                 ),
+            //               ))
+            //           .toList(),
+            //       value: selectedValue2,
+            //       onChanged: (String? value) {
+            //         setState(() {
+            //           selectedValue = value;
+            //         });
+            //       },
+            //       buttonStyleData: ButtonStyleData(
+            //         decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            //           border: Border.all(
+            //             color: Colors.grey,
+            //             width: 1.0,
+            //           ),
+            //         ),
+            //         padding: EdgeInsets.symmetric(horizontal: 16),
+            //         height: 40,
+            //       ),
+            //       menuItemStyleData: const MenuItemStyleData(
+            //         height: 40,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               height: height * 0.02,
             ),

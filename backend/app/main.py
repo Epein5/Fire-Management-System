@@ -44,7 +44,7 @@ async def read_root(request: Request):
     assigned_no_of_manpower = firebase_service.get_assigned_and_available_resources_count()['assigned_manpower_count']
     assigned_no_of_vehicles = firebase_service.get_assigned_and_available_resources_count()['assigned_vehicle_count']
     hawa = firebase_service.get_all_assigned_resources()
-    print(hawa)
+    # print(hawa)
     try:
         fire_location = firebase_service.process_fires_with_location_names()
     except:
@@ -65,14 +65,13 @@ async def show_map(request: Request, fire_id: str):
     remaining_resources = firebase_service.get_remaining_resources()
     manpower_data, vehicle_data = remaining_resources  # Unpack the tuple
 
-    # print(remaining_resources)
     return templates.TemplateResponse("map.html", {"request": request, "info": info, "manpower_data": manpower_data, "vehicle_data": vehicle_data,"fire_id":fire_id})
 
-@app.get("/delete/{fire_id}", response_class=JSONResponse)
-async def delete_fire(request: Request, fire_id: str):
+@app.delete("/delete/{fire_id}", response_class=JSONResponse)
+async def delete_fire(fire_id: str):
     firebase_service.delete_fire(fire_id)
     # Return a JavaScript code to reload the page
-    return {'message': "Fire entry with ID '{fire_id}' deleted successfully"}
+    return {'message': f"Fire entry with ID '{fire_id}' deleted successfully"}
 
 @app.get("/route", response_class=JSONResponse)
 async def get_route(start_latitude: float, start_longitude: float, end_latitude: float, end_longitude: float):
@@ -122,7 +121,7 @@ async def livefeed(request: Request):
                                        "available_no_of_vehicles": available_no_of_vehicles,
                                        "assigned_no_of_manpower": assigned_no_of_manpower,
                                        "assigned_no_of_vehicles": assigned_no_of_vehicles,
-                                       "fire_location": fire_location,})
+                                       "fire_location": fire_location})
 
 @app.get("/video_feed/{video_id}", response_class=HTMLResponse)
 async def video_feed(request: Request, video_id: str):
@@ -131,8 +130,9 @@ async def video_feed(request: Request, video_id: str):
 
 
 video_paths = {
-    # "1": "static/videos/fire0.mp4",
-    "2": "static/videos/fire1.mp4",
+    "1": "static/videos/fire.mp4",
+    # "2": "static/videos/midcandle.mp4",
+    # "2": "static/videos/fire1.mp4",
     # "3": "static/videos/video1.mp4",
     # "4": "static/videos/cow.mp4",
     # Add more video paths as needed
@@ -141,9 +141,45 @@ video_paths = {
 video_captures = {video_id: cv2.VideoCapture(path) for video_id, path in video_paths.items()}
 print(video_captures)
 
+# def generate_frames(video_id):
+#     print(f"Generating frames for video: {video_id}")
+#     camera = video_captures[video_id]
+#     while True:
+#         success, frame = camera.read()
+#         if not success:
+#             break
+#         else:
+#             # Run object detection using YOLOv8
+#             downsampled_frame = cv2.resize(frame, None, fx=0.3, fy=0.3, interpolation=cv2.INTER_AREA)
+#             results = model(downsampled_frame)
+#             a = fire_detection.process_frame(downsampled_frame, results)
+#             if a == True:
+#                 firebase_service.create_new_fire()
+#             # Draw bounding boxes and labels on the frame
+#             annotated_frame = results[0].plot()
+#             # frame = cv2.cvtColor(np.array(annotated_frame), cv2.COLOR_RGB2BGR)
+#             frame = np.array(annotated_frame)
+#             # print(frame.shape)
+#             # Call the 'create_fire' function for each detected object
+
+
+#             ret, buffer = cv2.imencode('.jpg', frame)
+#             frame = buffer.tobytes()
+#             # print("Frame generated")
+#             yield (b'--frame\r\n'
+#                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+# @app.get("/video/{video_id}")
+# async def video_feed(video_id: str):
+#     print(f"Video feed for video: {video_id}")
+#     if video_id in video_captures:
+#         return StreamingResponse(generate_frames(video_id), media_type="multipart/x-mixed-replace; boundary=frame")
+#     else:
+#         return {"error": f"Video '{video_id}' not found"}
 def generate_frames(video_id):
     print(f"Generating frames for video: {video_id}")
     camera = video_captures[video_id]
+    fire_detected = False
     while True:
         success, frame = camera.read()
         if not success:
@@ -152,19 +188,16 @@ def generate_frames(video_id):
             # Run object detection using YOLOv8
             downsampled_frame = cv2.resize(frame, None, fx=0.3, fy=0.3, interpolation=cv2.INTER_AREA)
             results = model(downsampled_frame)
-            fire_detection.process_frame(downsampled_frame, results)
-
+            if not fire_detected:
+                fire_detected = fire_detection.process_frame(downsampled_frame, results)
+                if fire_detected:
+                    firebase_service.create_new_fire()
             # Draw bounding boxes and labels on the frame
             annotated_frame = results[0].plot()
-            # frame = cv2.cvtColor(np.array(annotated_frame), cv2.COLOR_RGB2BGR)
             frame = np.array(annotated_frame)
-            # print(frame.shape)
-            # Call the 'create_fire' function for each detected object
-
 
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
-            # print("Frame generated")
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 

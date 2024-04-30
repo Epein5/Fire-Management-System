@@ -206,10 +206,10 @@
                                     </a>
                                   </td>
                                   <td>
-                                    <!-- <a href="/delete/{{ fire_id }}" > -->
-                                    <i class="fas fa-trash-alt" style="color: black;"></i>
-                                <!-- </a> -->
-                            </td>
+                                    <a href="/delete/{{ fire_id }}" onclick="confirmDelete(event, '{{ fire_id }}')">
+                                      <i class="fas fa-trash-alt" style="color: black;"></i>
+                                    </a>
+                                  </td>
 
                             </tr>
                             {% endfor %}
@@ -221,7 +221,36 @@
 
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
-
+    <script>
+        function confirmDelete(event, fireId) {
+            if (confirm("Are you sure you want to delete this fire incident?")) {
+              // User confirmed, proceed with deletion
+              event.preventDefault(); // Prevent the default link behavior
+          
+              // Send a DELETE request to the server
+              fetch(`/delete/${fireId}`, {
+                method: 'DELETE'
+              })
+              .then(response => response.json()) // Parse the response as JSON
+              .then(data => {
+                if (data.message) {
+                  // Fire incident deleted successfully
+                  alert(data.message); // Display the success message
+                  window.location.reload(); // Refresh the page
+                } else {
+                  // Handle unexpected response
+                  console.error('Unexpected response from the server.');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+            } else {
+              // User canceled, do nothing
+              event.preventDefault(); // Prevent the default link behavior
+            }
+          }
+    </script>
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

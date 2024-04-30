@@ -131,7 +131,7 @@
     <ul class = "accordion">
         <li>
             <input type="radio" name="accordion" id="first">
-            <label for="first">Location :  {{info.location_name}}</label>
+            <label for="first">Location :  Bhaktapur</label>
             <!-- <div class="contentt">
                 <p>latitude: {{info.location.latitude}} longitude: {{info.location.longitude}}</p>
             </div> -->
@@ -289,6 +289,7 @@
                 if (response.ok) {
                     console.log('Resources assigned successfully');
                     // You can perform additional actions here if needed
+                    window.location.reload();
                 } else {
                     console.error('Failed to assign resources');
                 }
