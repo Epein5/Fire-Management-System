@@ -23,7 +23,8 @@ class _MapViewState extends State<MapView> {
 
   void _drawRoute() async {
     // Specify the starting location (27.670572, 85.420738)
-    LatLng startLocation = LatLng(27.670572, 85.420738);
+    //TIA FIre Stattion 
+    LatLng startLocation = LatLng(27.695209212296703, 85.35959313206881);
 
     // Specify the destination location (fire location)
     LatLng endLocation = LatLng(

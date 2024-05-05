@@ -35,8 +35,8 @@ class FirebaseService:
         current_datetime = datetime.now().replace(microsecond=0).isoformat() + 'Z'
         new_fire_data = {
             'location': {
-                'latitude': 27.50155,
-                'longitude': 85.42466
+                'latitude': 27.702722, 
+                'longitude': 85.317160
             },
             'time_detected': current_datetime[:10] + '     ' + current_datetime[11:16],
             'date_detected': current_datetime[:10],
