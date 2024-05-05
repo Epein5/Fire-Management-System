@@ -21,6 +21,21 @@ The Fire Management System is a comprehensive solution designed to detect and re
 - Set up Firebase
 - Add `ServiceAccountKey.json` for the web (in `backend/app` directory) and mobile application
 
+### Firebase Resources
+The project requires setting up a "Resources" folder in Firebase with the following structure. This contains the total number of Manpower
+
+      Resources
+          └── Manpower
+            ├── 758510
+            │   ├── name: "Bishnu Shrestha"
+            │   └── photo: "photo_link"
+            ├── 988838
+          └── Vehicles
+            ├── BA7798
+            │   ├── photo: "photolink"
+            ├── BA8838
+
+
 ## Static Files
 Create a `static` folder with the following subdirectories:
 
@@ -30,24 +45,30 @@ Create a `static` folder with the following subdirectories:
 
 Update the `<div class="video-item">` in the HTML file with your video URL:
 
-         `<div class="video-item">
+         <div class="video-item">
            <video class="video" id="4" autoplay muted loop>
              <source src="../static/videos/road2.mp4" type="video/mp4" />
              Your browser does not support the video tag.
             </video>
-           </div>`
+           </div>
 
 To detect fire from multiple videos, add them to the video_paths dictionary in the Python code:
 
-      `video_paths = {
+      video_paths = {
             "1": "static/videos/fire.mp4",
             # "2": "static/videos/midcandle.mp4",
             # "2": "static/videos/fire1.mp4",
             # "3": "static/videos/video1.mp4",
             # "4": "static/videos/cow.mp4",
             # Add more video paths as needed
-        }`
+        }
 ##### Note: The video results may appear slower as the number of videos increases due to limited computational resources on your device.
+
+Also 
+After you have changd all the required image and video urls
+### Run the Server 
+
+      uvicorn main:app --reload
 
 ## Pages
 
